@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: mysql:8.0
-    container_name: mysql-container
+    container_name: mysqldb
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -11,9 +11,22 @@ services:
       MYSQL_USER: graduate_user
       MYSQL_PASSWORD: graduate_pass
     ports:
-      - "3306:3306"
+      - "3305:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8080:80"  # 80번 포트 충돌 방지를 위해 8080으로 변경 (필요 시 조정)
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: db
+      PMA_PORT: 3306
 
 volumes:
   mysql_data:
